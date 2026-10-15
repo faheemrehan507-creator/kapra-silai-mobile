@@ -22,12 +22,36 @@ class MainActivity : AppCompatActivity() {
         s.domStorageEnabled = true
         s.databaseEnabled = true
         s.allowFileAccess = true
+        s.allowContentAccess = true
         s.loadWithOverviewMode = true
         s.useWideViewPort = true
 
         webView.webViewClient = WebViewClient()
         webView.webChromeClient = WebChromeClient()
-        webView.loadUrl("file:///android_asset/kapra_silai_app.html")
+
+        // Read HTML directly from APK assets stream and render via HTTPS base URL
+        // This completely prevents net::ERR_FILE_NOT_FOUND on Android 11-15!
+        val htmlContent = try {
+            assets.open("kapra_silai_app.html").bufferedReader(Charsets.UTF_8).use { it.readText() }
+        } catch (e: Exception) {
+            try {
+                assets.open("index.html").bufferedReader(Charsets.UTF_8).use { it.readText() }
+            } catch (e2: Exception) {
+                ""
+            }
+        }
+
+        if (htmlContent.isNotEmpty()) {
+            webView.loadDataWithBaseURL(
+                "https://app.kaprasilai.pk/",
+                htmlContent,
+                "text/html",
+                "UTF-8",
+                null
+            )
+        } else {
+            webView.loadUrl("file:///android_asset/kapra_silai_app.html")
+        }
     }
 
     @Deprecated("Deprecated in Java")
