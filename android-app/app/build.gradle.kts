@@ -11,8 +11,8 @@ android {
         applicationId = "com.stitchtech.kaprasilai"
         minSdk = 24
         targetSdk = 34
-        versionCode = 26
-        versionName = "2.6.0"
+        versionCode = 28
+        versionName = "2.8.0"
     }
 
     compileOptions {

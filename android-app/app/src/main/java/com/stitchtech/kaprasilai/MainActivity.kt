@@ -3,6 +3,8 @@ package com.stitchtech.kaprasilai
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -10,6 +12,17 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
+
+    private fun readAssetHtml(): String {
+        val candidates = listOf("kapra_silai_app.html", "index.html")
+        for (name in candidates) {
+            try {
+                val text = assets.open(name).bufferedReader(Charsets.UTF_8).use { it.readText() }
+                if (text.isNotBlank()) return text
+            } catch (_: Exception) {}
+        }
+        return ""
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,32 +38,39 @@ class MainActivity : AppCompatActivity() {
         s.allowContentAccess = true
         s.loadWithOverviewMode = true
         s.useWideViewPort = true
+        s.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
-        webView.webViewClient = WebViewClient()
-        webView.webChromeClient = WebChromeClient()
+        val assetHtml = readAssetHtml()
 
-        // Read HTML directly from APK assets stream and render via HTTPS base URL
-        // This completely prevents net::ERR_FILE_NOT_FOUND on Android 11-15!
-        val htmlContent = try {
-            assets.open("kapra_silai_app.html").bufferedReader(Charsets.UTF_8).use { it.readText() }
-        } catch (e: Exception) {
-            try {
-                assets.open("index.html").bufferedReader(Charsets.UTF_8).use { it.readText() }
-            } catch (e2: Exception) {
-                ""
+        webView.webViewClient = object : WebViewClient() {
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                if (request?.isForMainFrame == true && assetHtml.isNotEmpty()) {
+                    view?.loadDataWithBaseURL(
+                        "https://app.kaprasilai.pk/",
+                        assetHtml,
+                        "text/html",
+                        "UTF-8",
+                        null
+                    )
+                }
             }
         }
+        webView.webChromeClient = WebChromeClient()
 
-        if (htmlContent.isNotEmpty()) {
+        if (assetHtml.isNotEmpty()) {
             webView.loadDataWithBaseURL(
                 "https://app.kaprasilai.pk/",
-                htmlContent,
+                assetHtml,
                 "text/html",
                 "UTF-8",
                 null
             )
         } else {
-            webView.loadUrl("file:///android_asset/kapra_silai_app.html")
+            webView.loadUrl("https://faheemrehan507-creator.github.io/kapra-silai-mobile/")
         }
     }
 

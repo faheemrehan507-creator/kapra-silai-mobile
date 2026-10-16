@@ -1,4 +1,4 @@
-# Kapra Silai (StitchTech) — Mobile App & Automated APK Builder
+# Kapra Silai (StitchTech) v2.8 — Mobile App & Automated APK Builder
 
-1. **Live Mobile Web App (PWA)**: Hosted via GitHub Pages from `index.html`.
-2. **Automated Android APK**: Built automatically by GitHub Actions (`.github/workflows/build-apk.yml`). Check the **Releases** or **Actions** tab to download `app-debug.apk` directly to your Android phone!
+1. **Live Mobile Web App (PWA)**: [https://faheemrehan507-creator.github.io/kapra-silai-mobile/](https://faheemrehan507-creator.github.io/kapra-silai-mobile/)
+2. **Fixed Android APK (v2.8)**: Download `Kapra-Silai-v2.8.apk` from the **Releases** section!
