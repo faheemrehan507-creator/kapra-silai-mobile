@@ -3,25 +3,34 @@ package com.stitchtech.kaprasilai
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
 
-    private fun readAssetHtml(): String {
+    private fun openAppAssetStream(): InputStream {
         val candidates = listOf("kapra_silai_app.html", "index.html")
         for (name in candidates) {
             try {
-                val text = assets.open(name).bufferedReader(Charsets.UTF_8).use { it.readText() }
-                if (text.isNotBlank()) return text
+                return assets.open(name)
             } catch (_: Exception) {}
         }
-        return ""
+        val fallback = """
+            <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+            <meta http-equiv="refresh" content="0;url=https://faheemrehan507-creator.github.io/kapra-silai-mobile/"></head>
+            <body style="background:#0f172a;color:#fff;font-family:sans-serif;padding:24px;text-align:center;">
+            <h3>Loading Kapra Silai Cloud...</h3>
+            <p><a href="https://faheemrehan507-creator.github.io/kapra-silai-mobile/" style="color:#fbbf24;">Tap here if not redirected</a></p>
+            </body></html>
+        """.trimIndent()
+        return ByteArrayInputStream(fallback.toByteArray(Charsets.UTF_8))
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -40,38 +49,29 @@ class MainActivity : AppCompatActivity() {
         s.useWideViewPort = true
         s.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
-        val assetHtml = readAssetHtml()
-
         webView.webViewClient = object : WebViewClient() {
-            override fun onReceivedError(
+            override fun shouldInterceptRequest(
                 view: WebView?,
-                request: WebResourceRequest?,
-                error: WebResourceError?
-            ) {
-                if (request?.isForMainFrame == true && assetHtml.isNotEmpty()) {
-                    view?.loadDataWithBaseURL(
-                        "https://app.kaprasilai.pk/",
-                        assetHtml,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                val url = request?.url?.toString() ?: return null
+                if (url.startsWith("https://appassets.kaprasilai.pk/")) {
+                    return WebResourceResponse(
                         "text/html",
                         "UTF-8",
-                        null
+                        200,
+                        "OK",
+                        mapOf("Access-Control-Allow-Origin" to "*", "Cache-Control" to "no-store"),
+                        openAppAssetStream()
                     )
                 }
+                return super.shouldInterceptRequest(view, request)
             }
         }
         webView.webChromeClient = WebChromeClient()
 
-        if (assetHtml.isNotEmpty()) {
-            webView.loadDataWithBaseURL(
-                "https://app.kaprasilai.pk/",
-                assetHtml,
-                "text/html",
-                "UTF-8",
-                null
-            )
-        } else {
-            webView.loadUrl("https://faheemrehan507-creator.github.io/kapra-silai-mobile/")
-        }
+        // Load via virtual HTTPS asset origin — zero file:// errors, zero IPC string limits!
+        webView.loadUrl("https://appassets.kaprasilai.pk/index.html")
     }
 
     @Deprecated("Deprecated in Java")

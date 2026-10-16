@@ -1,0 +1,11 @@
+{
+  "name": "Kapra Silai (StitchTech) v3.0",
+  "short_name": "Kapra Silai",
+  "description": "Your Fabric, Our Craft — AI-Powered Tailoring Marketplace",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fdfbf7",
+  "theme_color": "#5c1111",
+  "orientation": "portrait"
+}

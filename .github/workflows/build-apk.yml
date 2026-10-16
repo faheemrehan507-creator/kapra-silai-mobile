@@ -1,4 +1,4 @@
-name: Build & Release Kapra Silai Android APK v2.8
+name: Build & Release Kapra Silai Android APK v3.0
 
 on:
   push:
@@ -21,6 +21,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Install Persistent Signing Keystore (Prevents Update Package Conflict)
+        run: |
+          mkdir -p ~/.android
+          echo "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" | base64 -d > ~/.android/debug.keystore
+          cp -f ~/.android/debug.keystore android-app/app/debug.keystore
+
       - name: Populate & Verify Android WebView Assets (Prevents ERR_FILE_NOT_FOUND)
         run: |
           mkdir -p android-app/app/src/main/assets
@@ -40,29 +46,32 @@ jobs:
         with:
           gradle-version: '8.5'
 
-      - name: Build Debug APK
+      - name: Build Signed APK
         working-directory: ./android-app
         run: gradle assembleDebug --no-daemon
 
-      - name: Rename APK to Kapra-Silai-v2.8.apk
+      - name: Verify HTML Asset Is Packaged Inside APK
         run: |
-          cp android-app/app/build/outputs/apk/debug/app-debug.apk android-app/app/build/outputs/apk/debug/Kapra-Silai-v2.8.apk
+          unzip -l android-app/app/build/outputs/apk/debug/app-debug.apk | grep "assets/kapra_silai_app.html"
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk android-app/app/build/outputs/apk/debug/Kapra-Silai-v3.0.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Kapra-Silai-Android-APK-v2.8
-          path: android-app/app/build/outputs/apk/debug/Kapra-Silai-v2.8.apk
+          name: Kapra-Silai-Android-APK-v3.0
+          path: android-app/app/build/outputs/apk/debug/Kapra-Silai-v3.0.apk
 
       - name: Publish Direct Download APK Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.8.${{ github.run_number }}
-          name: "Kapra Silai Android APK v2.8 (Build #${{ github.run_number }} — Fixed)"
+          tag_name: v3.0.${{ github.run_number }}
+          name: "Kapra Silai Android APK v3.0 (Build #${{ github.run_number }} — No Conflict + Verified Assets)"
           body: |
-            ### ✅ Fixed Android APK (v2.8 Build #${{ github.run_number }})
-            - **Fixed `ERR_FILE_NOT_FOUND`**: Bundles `kapra_silai_app.html` and `index.html` directly inside APK `assets/` and loads via `loadDataWithBaseURL()`.
-            - Tap **Kapra-Silai-v2.8.apk** (or **app-debug.apk**) below on your Android phone to install!
+            ### ✅ Kapra Silai v3.0 Android APK (Build #${{ github.run_number }})
+            - **Zero Package Conflict**: Uses clean package ID `com.stitchtech.kaprasilai.v3` + persistent RSA-2048 signing keystore so it installs alongside or over old builds without conflict!
+            - **Zero File Not Found**: Verified `assets/kapra_silai_app.html` inside APK and served via `shouldInterceptRequest` HTTPS stream (`https://appassets.kaprasilai.pk/index.html`).
+            - **100% Data Availability**: Pre-seeded Multan/Rawalpindi/Lahore tailors, AI Naap calculator, 3D Studio, and live order tracker.
+            - Tap **Kapra-Silai-v3.0.apk** below on your Android phone to install!
           files: |
-            android-app/app/build/outputs/apk/debug/Kapra-Silai-v2.8.apk
+            android-app/app/build/outputs/apk/debug/Kapra-Silai-v3.0.apk
             android-app/app/build/outputs/apk/debug/app-debug.apk

@@ -8,11 +8,29 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.stitchtech.kaprasilai"
+        applicationId = "com.stitchtech.kaprasilai.v3"
         minSdk = 24
         targetSdk = 34
-        versionCode = 28
-        versionName = "2.8.0"
+        versionCode = 30
+        versionName = "3.0.0"
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            val ksFile = file("debug.keystore")
+            if (ksFile.exists()) {
+                storeFile = ksFile
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
+    }
+
+    buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
     }
 
     compileOptions {
