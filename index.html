@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>KapraSilai (kaprasilai.pk) — Pakistan's #1 AI Tailoring Marketplace</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .emerald-grad {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+    }
+    .gold-grad {
+      background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    }
+    .ribbon-loop {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #9333ea, #ec4899);
+      color: white;
+      border-radius: 9999px;
+      padding: 2px 8px;
+      font-size: 0.85em;
+      box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);
+    }
+    .card-hover {
+      transition: all 0.25s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -6px rgba(6, 95, 70, 0.18);
+    }
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between pb-16 md:pb-0">
+
+  <!-- ================= STICKY TOP HEADER ================= -->
+  <header class="sticky top-0 z-40 emerald-grad text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Left: Hamburger Menu & Brand Logo -->
+      <div class="flex items-center space-x-3">
+        <button onclick="toggleDrawer()" class="p-2 rounded-lg hover:bg-white/10 focus:outline-none" aria-label="Menu">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        
+        <a href="#" onclick="showSection('home')" class="flex items-center space-x-2">
+          <!-- Original KapraSilai + Purple Ribbon Logo -->
+          <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md relative">
+            <span class="text-xl font-extrabold text-emerald-900">K</span>
+            <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-purple-600 text-white text-[10px] flex items-center justify-center shadow">➰</span>
+          </div>
+          <div>
+            <div class="flex items-center space-x-1">
+              <span class="font-extrabold text-xl tracking-tight text-white">Kapra<span class="text-amber-400">Silai</span></span>
+              <span class="ribbon-loop text-xs" title="Original Ribbon">➰</span>
+            </div>
+            <span class="block text-[10px] text-emerald-200 -mt-1">kaprasilai.pk • Smart Darzi</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Desktop Navigation Links -->
+      <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+        <button onclick="showSection('home')" class="hover:text-amber-300 transition">Home</button>
+        <button onclick="showSection('services')" class="hover:text-amber-300 transition">Services & Pricing</button>
+        <button onclick="showSection('tailors')" class="hover:text-amber-300 transition">Master Tailors</button>
+        <button onclick="showSection('studio')" class="hover:text-amber-300 transition">3D Silai Studio</button>
+        <button onclick="showSection('naap')" class="hover:text-amber-300 transition">AI Digital Naap</button>
+        <button onclick="showSection('orders')" class="hover:text-amber-300 transition">Track Order</button>
+      </nav>
+
+      <!-- Right: City Selector, Notifications & Book CTA -->
+      <div class="flex items-center space-x-3">
+        <div class="hidden sm:flex items-center bg-white/10 px-3 py-1.5 rounded-full text-xs">
+          <i class="fas fa-location-dot text-amber-400 mr-1.5"></i>
+          <select id="citySelector" onchange="filterTailors()" class="bg-transparent text-white font-semibold focus:outline-none cursor-pointer">
+            <option value="All" class="text-slate-900">All Pakistan</option>
+            <option value="Multan" selected class="text-slate-900">Multan</option>
+            <option value="Lahore" class="text-slate-900">Lahore</option>
+            <option value="Rawalpindi" class="text-slate-900">Rawalpindi</option>
+          </select>
+        </div>
+
+        <button onclick="showSection('notifications')" class="relative p-2 rounded-full hover:bg-white/10">
+          <i class="fas fa-bell text-lg"></i>
+          <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-amber-400 rounded-full animate-ping"></span>
+          <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-amber-400 rounded-full"></span>
+        </button>
+
+        <button onclick="openBookingModal('Men\'s Shalwar Kameez', 1800)" class="gold-grad text-slate-950 font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow hover:opacity-95 transition">
+          Book Now
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= SLIDE-OUT SIDEBAR DRAWER (WITH HIDDEN ADMIN MENU) ================= -->
+  <div id="drawerOverlay" onclick="toggleDrawer()" class="fixed inset-0 bg-black/60 z-50 hidden backdrop-blur-xs"></div>
+  <aside id="sideDrawer" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 flex flex-col justify-between overflow-y-auto">
+    <div>
+      <!-- Drawer Header -->
+      <div class="emerald-grad p-5 text-white flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-emerald-900 font-black text-xl shadow">
+            K<span class="text-xs ml-0.5">➰</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-base">KapraSilai App</h3>
+            <p class="text-xs text-emerald-200">v5.0 Production • Multan</p>
+          </div>
+        </div>
+        <button onclick="toggleDrawer()" class="p-2 rounded-lg hover:bg-white/10">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Customer Navigation Links -->
+      <div class="p-4 space-y-1 border-b border-slate-100">
+        <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Customer Menu</p>
+        <button onclick="navFromDrawer('home')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 text-slate-700 font-medium text-sm">
+          <i class="fas fa-home text-emerald-700 w-5"></i><span>Home Page</span>
+        </button>
+        <button onclick="navFromDrawer('services')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 text-slate-700 font-medium text-sm">
+          <i class="fas fa-scissors text-emerald-700 w-5"></i><span>Select Stitching Service</span>
+        </button>
+        <button onclick="navFromDrawer('tailors')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 text-slate-700 font-medium text-sm">
+          <i class="fas fa-user-check text-emerald-700 w-5"></i><span>Verified Master Tailors</span>
+        </button>
+        <button onclick="navFromDrawer('studio')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 text-slate-700 font-medium text-sm">
+          <i class="fas fa-shirt text-emerald-700 w-5"></i><span>3D Silai Custom Studio</span>
+        </button>
+        <button onclick="navFromDrawer('naap')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 text-slate-700 font-medium text-sm">
+          <i class="fas fa-ruler-combined text-emerald-700 w-5"></i><span>AI Digital Naap Vault</span>
+        </button>
+        <button onclick="navFromDrawer('orders')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 text-slate-700 font-medium text-sm">
+          <i class="fas fa-box-open text-emerald-700 w-5"></i><span>My Orders & Live Tracking</span>
+        </button>
+        <button onclick="navFromDrawer('account')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 text-slate-700 font-medium text-sm">
+          <i class="fas fa-user-circle text-emerald-700 w-5"></i><span>Login / My Account</span>
+        </button>
+      </div>
+
+      <!-- COLLAPSIBLE HIDDEN ADMIN, PARTNER PORTALS & CLOUD TOOLS -->
+      <div class="p-4">
+        <button onclick="toggleAdminMenu()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+          <span class="flex items-center space-x-2">
+            <i class="fas fa-shield-halved text-emerald-800"></i>
+            <span>Admin, Partner Portals & Cloud Tools</span>
+          </span>
+          <i id="adminChevron" class="fas fa-chevron-down transition-transform duration-200"></i>
+        </button>
+
+        <div id="hiddenAdminSection" class="hidden mt-2 space-y-1.5 pl-2 border-l-2 border-emerald-600">
+          <button onclick="navFromDrawer('admin-cms')" class="w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-emerald-50 text-xs font-semibold text-slate-700">
+            <i class="fas fa-chart-pie text-emerald-700 w-4"></i><span>Website Backend CMS & ERP</span>
+          </button>
+          <button onclick="navFromDrawer('darzi-portal')" class="w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-emerald-50 text-xs font-semibold text-slate-700">
+            <i class="fas fa-tape text-amber-600 w-4"></i><span>Darzi Partner Portal</span>
+          </button>
+          <button onclick="navFromDrawer('rider-app')" class="w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-emerald-50 text-xs font-semibold text-slate-700">
+            <i class="fas fa-motorcycle text-blue-600 w-4"></i><span>Rider Pickup/Delivery App</span>
+          </button>
+          <button onclick="navFromDrawer('cloud-deploy')" class="w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg hover:bg-purple-50 text-xs font-semibold text-purple-700">
+            <i class="fab fa-github text-purple-700 w-4"></i><span>GitHub Connect & kaprasilai.pk DNS</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-500">
+      <p class="font-semibold text-slate-700">Helpline: +92 301 8452910</p>
+      <p>7-Day Free Alteration Guarantee</p>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT CONTAINER ================= -->
+  <main class="flex-grow">
+
+    <!-- 1. HOME SECTION -->
+    <section id="sec-home" class="space-y-10 pb-12">
+      <!-- Hero Banner -->
+      <div class="emerald-grad text-white py-10 md:py-16 px-4 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+          <div class="space-y-5 z-10">
+            <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-xs px-3.5 py-1.5 rounded-full text-xs font-semibold text-amber-300 border border-white/15">
+              <span>✨ Pakistan's #1 AI Tailoring Marketplace</span>
+              <span>•</span>
+              <span>Promo: MULTAN20</span>
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight">
+              Quality Stitching.<br />
+              <span class="text-amber-400">Perfect Doorstep Fit.</span>
+            </h1>
+            <p class="text-emerald-100 text-sm sm:text-base max-w-xl leading-relaxed">
+              Book verified Master Darzis & certified Female Tailors across Multan, Lahore & Rawalpindi. Free rider fabric pickup, AI Digital Naap, and guaranteed 3 to 7-day delivery!
+            </p>
+            
+            <!-- Instant Booking Bar -->
+            <div class="bg-white p-2 rounded-2xl shadow-xl max-w-xl flex flex-col sm:flex-row gap-2">
+              <select id="quickCategory" class="flex-grow px-3 py-2.5 text-slate-800 text-sm font-medium rounded-xl bg-slate-50 focus:outline-none">
+                <option value="Men's Shalwar Kameez|1800">Men's Shalwar Kameez (PKR 1,800)</option>
+                <option value="Women's 3-Piece Lawn Suit|2500">Women's 3-Pc Suit (PKR 2,500)</option>
+                <option value="Women's Party Wear / Maxi|5500">Women's Party Wear / Bridal (PKR 5,500)</option>
+                <option value="Men's Bespoke Waistcoat / Suit|4500">Men's Waistcoat / 2-Pc Suit (PKR 4,500)</option>
+                <option value="Kids Festive Kurta / Frock|1200">Kids Stitching (PKR 1,200)</option>
+              </select>
+              <button onclick="quickBook()" class="gold-grad text-slate-950 font-extrabold px-6 py-2.5 rounded-xl text-sm shadow hover:opacity-95 whitespace-nowrap">
+                Book Tailor Now →
+              </button>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="grid grid-cols-3 gap-3 pt-2 max-w-md text-xs text-emerald-100">
+              <div class="flex items-center space-x-1.5"><i class="fas fa-truck-fast text-amber-400"></i><span>Free Pickup</span></div>
+              <div class="flex items-center space-x-1.5"><i class="fas fa-person-dress text-amber-400"></i><span>Female Darzis</span></div>
+              <div class="flex items-center space-x-1.5"><i class="fas fa-shield-check text-amber-400"></i><span>7-Day Guarantee</span></div>
+            </div>
+          </div>
+
+          <!-- Hero HD Visual Card -->
+          <div class="relative z-10">
+            <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20 relative group">
+              <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=85" alt="KapraSilai Master Tailoring" class="w-full h-72 sm:h-96 object-cover" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+                <div class="flex items-center justify-between text-white">
+                  <div>
+                    <span class="bg-amber-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase">Live 3D Studio</span>
+                    <h3 class="text-lg font-bold mt-1">Custom Collar, Cuff & Daman Design</h3>
+                    <p class="text-xs text-slate-200">100% accurate Naap with Rider Fabric Pickup</p>
+                  </div>
+                  <button onclick="showSection('studio')" class="bg-white text-emerald-900 px-4 py-2 rounded-xl font-bold text-xs shadow">Try 3D Studio</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Pills (Mobile + Desktop) -->
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <button onclick="showSection('services')" class="bg-white p-4 rounded-2xl shadow-xs border border-slate-100 flex items-center space-x-3 card-hover text-left">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl"><i class="fas fa-scissors"></i></div>
+            <div>
+              <h4 class="font-bold text-sm">Select Service</h4>
+              <p class="text-xs text-slate-500">Men, Women & Kids</p>
+            </div>
+          </button>
+          <button onclick="showSection('tailors')" class="bg-white p-4 rounded-2xl shadow-xs border border-slate-100 flex items-center space-x-3 card-hover text-left">
+            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl"><i class="fas fa-user-tie"></i></div>
+            <div>
+              <h4 class="font-bold text-sm">Find a Darzi</h4>
+              <p class="text-xs text-slate-500">Top Rated & Female</p>
+            </div>
+          </button>
+          <button onclick="showSection('naap')" class="bg-white p-4 rounded-2xl shadow-xs border border-slate-100 flex items-center space-x-3 card-hover text-left">
+            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center text-xl"><i class="fas fa-ruler-combined"></i></div>
+            <div>
+              <h4 class="font-bold text-sm">AI Naap Vault</h4>
+              <p class="text-xs text-slate-500">Save Measurements</p>
+            </div>
+          </button>
+          <button onclick="showSection('orders')" class="bg-white p-4 rounded-2xl shadow-xs border border-slate-100 flex items-center space-x-3 card-hover text-left">
+            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-xl"><i class="fas fa-location-crosshairs"></i></div>
+            <div>
+              <h4 class="font-bold text-sm">Track Order</h4>
+              <p class="text-xs text-slate-500">7-Stage Live Status</p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- HD Services Catalog Preview -->
+      <div class="max-w-7xl mx-auto px-4 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Popular Stitching Categories</h2>
+            <p class="text-xs sm:text-sm text-slate-500">High-definition craftsmanship with doorstep fabric pickup</p>
+          </div>
+          <button onclick="showSection('services')" class="text-emerald-700 font-bold text-sm hover:underline">View All Prices →</button>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Men's Stitching HD Card -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-md border border-slate-100 card-hover flex flex-col justify-between">
+            <div>
+              <div class="relative h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=85" alt="Men's Stitching" class="w-full h-full object-cover" />
+                <span class="absolute top-3 left-3 bg-emerald-900/90 text-white text-xs font-bold px-3 py-1 rounded-full">Men's Bespoke</span>
+                <span class="absolute bottom-3 right-3 bg-white text-emerald-950 text-xs font-extrabold px-3 py-1 rounded-lg shadow">From PKR 1,800</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-extrabold text-lg">Men's Stitching</h3>
+                <p class="text-xs text-slate-500 mt-1">Shalwar Kameez, Kurta Pajama, Boski, Waistcoat & 2/3-Piece Formal Suits with buckram finish.</p>
+                <div class="flex flex-wrap gap-1.5 mt-3">
+                  <span class="text-[11px] bg-slate-100 px-2.5 py-1 rounded-md font-medium">Shalwar Kameez (4.5m)</span>
+                  <span class="text-[11px] bg-slate-100 px-2.5 py-1 rounded-md font-medium">Kurta</span>
+                  <span class="text-[11px] bg-slate-100 px-2.5 py-1 rounded-md font-medium">Waistcoat</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-5 pb-5">
+              <button onclick="openBookingModal('Men\'s Shalwar Kameez', 1800)" class="w-full emerald-grad text-white font-bold py-2.5 rounded-xl text-sm shadow">Select Men's Stitching</button>
+            </div>
+          </div>
+
+          <!-- Women's Stitching HD Card -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-md border border-slate-100 card-hover flex flex-col justify-between">
+            <div>
+              <div class="relative h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=85" alt="Women's Stitching" class="w-full h-full object-cover" />
+                <span class="absolute top-3 left-3 bg-purple-700 text-white text-xs font-bold px-3 py-1 rounded-full">👩‍🎨 Female Darzis Available</span>
+                <span class="absolute bottom-3 right-3 bg-white text-emerald-950 text-xs font-extrabold px-3 py-1 rounded-lg shadow">From PKR 1,600</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-extrabold text-lg">Women's Stitching</h3>
+                <p class="text-xs text-slate-500 mt-1">2-Piece & 3-Piece Lawn, Designer Piping/Lacework, Party Wear, Gharara & Bridal Lehenga/Maxi.</p>
+                <div class="flex flex-wrap gap-1.5 mt-3">
+                  <span class="text-[11px] bg-purple-50 text-purple-800 px-2.5 py-1 rounded-md font-medium">3-Pc Lawn</span>
+                  <span class="text-[11px] bg-purple-50 text-purple-800 px-2.5 py-1 rounded-md font-medium">Party Wear</span>
+                  <span class="text-[11px] bg-purple-50 text-purple-800 px-2.5 py-1 rounded-md font-medium">Bridal Maxi</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-5 pb-5">
+              <button onclick="openBookingModal('Women\'s 3-Piece Suit', 2500)" class="w-full emerald-grad text-white font-bold py-2.5 rounded-xl text-sm shadow">Select Women's Stitching</button>
+            </div>
+          </div>
+
+          <!-- Kids' Stitching HD Card -->
+          <div class="bg-white rounded-2xl overflow-hidden shadow-md border border-slate-100 card-hover flex flex-col justify-between">
+            <div>
+              <div class="relative h-56 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=800&q=85" alt="Kids' Stitching" class="w-full h-full object-cover" />
+                <span class="absolute top-3 left-3 bg-amber-500 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full">Soft & Festive</span>
+                <span class="absolute bottom-3 right-3 bg-white text-emerald-950 text-xs font-extrabold px-3 py-1 rounded-lg shadow">From PKR 1,200</span>
+              </div>
+              <div class="p-5">
+                <h3 class="font-extrabold text-lg">Kids' Stitching</h3>
+                <p class="text-xs text-slate-500 mt-1">Boys Kurta Shalwar, Waistcoat Sets, Girls Festive Frocks, Gharara & School Uniforms.</p>
+                <div class="flex flex-wrap gap-1.5 mt-3">
+                  <span class="text-[11px] bg-amber-50 text-amber-900 px-2.5 py-1 rounded-md font-medium">Boys Kurta</span>
+                  <span class="text-[11px] bg-amber-50 text-amber-900 px-2.5 py-1 rounded-md font-medium">Girls Frock</span>
+                  <span class="text-[11px] bg-amber-50 text-amber-900 px-2.5 py-1 rounded-md font-medium">Eid Special</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-5 pb-5">
+              <button onclick="openBookingModal('Kids Festive Suit / Frock', 1200)" class="w-full emerald-grad text-white font-bold py-2.5 rounded-xl text-sm shadow">Select Kids' Stitching</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SERVICES & PRICING SECTION -->
+    <section id="sec-services" class="hidden max-w-7xl mx-auto px-4 py-8 space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-extrabold">Select Stitching Service & Style</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Transparent rates with required fabric meter estimate</p>
+        </div>
+        <button onclick="showSection('home')" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl">← Back Home</button>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" id="serviceCatalogGrid"></div>
+    </section>
+
+    <!-- 3. MASTER TAILORS DIRECTORY -->
+    <section id="sec-tailors" class="max-w-7xl mx-auto px-4 py-6 space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-extrabold">Verified Master Tailors (Darzis)</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Background-checked workshops & certified home-based female tailors</p>
+        </div>
+        <div class="flex gap-2 overflow-x-auto no-scrollbar">
+          <button onclick="setTailorFilter('All')" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-800 text-white">All Tailors</button>
+          <button onclick="setTailorFilter('Female')" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800">👩‍🎨 Female Darzi</button>
+          <button onclick="setTailorFilter('Top')" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">⭐ 4.9+ Rated</button>
+        </div>
+      </div>
+
+      <div id="tailorsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
+    <!-- 4. 3D SILAI STUDIO SECTION -->
+    <section id="sec-studio" class="hidden max-w-5xl mx-auto px-4 py-8 space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-100">
+        <div class="flex items-center justify-between border-b pb-4 mb-6">
+          <div>
+            <span class="text-xs font-bold uppercase text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">Interactive Customizer</span>
+            <h2 class="text-2xl font-extrabold mt-1">3D Silai Studio</h2>
+          </div>
+          <button onclick="showSection('home')" class="text-xs font-bold text-slate-500 hover:text-slate-800">Close ✕</button>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <!-- Live Garment Preview Box -->
+          <div id="studioPreviewBox" class="rounded-2xl p-8 bg-emerald-950 text-white flex flex-col items-center justify-center min-h-[320px] relative shadow-inner">
+            <i class="fas fa-user-tie text-8xl text-amber-400 mb-4 transition-transform duration-300" id="studioIcon"></i>
+            <h3 id="studioSummaryTitle" class="text-lg font-extrabold text-center">Royal Emerald Shalwar Kameez</h3>
+            <p id="studioSummarySpecs" class="text-xs text-emerald-200 mt-1 text-center">Ban Collar • Round Cuffs • Double Silai • Square Daman</p>
+            <div class="mt-4 bg-white/10 px-4 py-2 rounded-xl text-xs font-bold text-amber-300">
+              Estimated Stitching: PKR <span id="studioPrice">2,100</span>
+            </div>
+          </div>
+
+          <!-- Customization Controls -->
+          <div class="space-y-4">
+            <div>
+              <label class="text-xs font-bold text-slate-600 uppercase">1. Collar / Neck Style</label>
+              <select id="stCollar" onchange="updateStudio()" class="w-full mt-1 p-3 rounded-xl border border-slate-200 text-sm font-semibold">
+                <option value="Ban Collar (Sherwani)">Ban Collar (Sherwani)</option>
+                <option value="Classic Pointed Collar">Classic Pointed Collar</option>
+                <option value="Boat Neck with Piping (Women)">Boat Neck with Piping (Women)</option>
+                <option value="V-Neck Lacework (Women)">V-Neck Lacework (Women)</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-600 uppercase">2. Sleeve & Cuff Style</label>
+              <select id="stCuff" onchange="updateStudio()" class="w-full mt-1 p-3 rounded-xl border border-slate-200 text-sm font-semibold">
+                <option value="Round Bukram Cuffs">Round Bukram Cuffs</option>
+                <option value="Open Kurta Sleeves">Open Kurta Sleeves</option>
+                <option value="Bell Sleeves with Organza">Bell Sleeves with Organza</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-600 uppercase">3. Daman & Stitching Finish</label>
+              <select id="stDaman" onchange="updateStudio()" class="w-full mt-1 p-3 rounded-xl border border-slate-200 text-sm font-semibold">
+                <option value="Square Daman • Double Silai">Square Daman • Double Silai</option>
+                <option value="Round Kurta Daman • चमक धागा">Round Kurta Daman • Silk Thread</option>
+                <option value="A-Line Daman with Dori Piping">A-Line Daman with Dori Piping</option>
+              </select>
+            </div>
+            <button onclick="bookFromStudio()" class="w-full gold-grad text-slate-950 font-extrabold py-3.5 rounded-xl shadow-md text-sm">
+              Apply Design & Book Master Tailor →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. AI DIGITAL NAAP VAULT -->
+    <section id="sec-naap" class="hidden max-w-4xl mx-auto px-4 py-8">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-100 space-y-6">
+        <div class="flex items-center justify-between border-b pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full">100% Fit Accuracy</span>
+            <h2 class="text-2xl font-extrabold mt-1">AI Digital Naap Vault</h2>
+            <p class="text-xs text-slate-500">Enter height & weight for instant AI estimation or save your custom Darzi measurements</p>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-4 bg-emerald-50/70 p-4 rounded-2xl border border-emerald-100">
+          <div>
+            <label class="text-xs font-bold text-slate-600">Height (Feet/Inches)</label>
+            <input id="aiHeight" type="text" value="5'9&quot;" class="w-full mt-1 p-2.5 rounded-xl border text-sm font-bold" />
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600">Weight (KG)</label>
+            <input id="aiWeight" type="number" value="72" class="w-full mt-1 p-2.5 rounded-xl border text-sm font-bold" />
+          </div>
+          <div class="flex items-end">
+            <button onclick="generateAINaap()" class="w-full emerald-grad text-white font-bold py-2.5 rounded-xl text-sm shadow">
+              ⚡ Auto-Calculate AI Naap
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div class="p-3 bg-slate-50 rounded-xl border">
+            <label class="text-[11px] text-slate-500 font-bold">Kameez Length (Inches)</label>
+            <input id="npLength" type="number" step="0.5" value="41.5" class="w-full font-extrabold text-lg bg-transparent focus:outline-none text-emerald-900" />
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border">
+            <label class="text-[11px] text-slate-500 font-bold">Chest / Chati (Inches)</label>
+            <input id="npChest" type="number" step="0.5" value="22.5" class="w-full font-extrabold text-lg bg-transparent focus:outline-none text-emerald-900" />
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border">
+            <label class="text-[11px] text-slate-500 font-bold">Shoulder / Teera (Inches)</label>
+            <input id="npShoulder" type="number" step="0.5" value="18.0" class="w-full font-extrabold text-lg bg-transparent focus:outline-none text-emerald-900" />
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border">
+            <label class="text-[11px] text-slate-500 font-bold">Sleeves / Bazu (Inches)</label>
+            <input id="npSleeves" type="number" step="0.5" value="24.5" class="w-full font-extrabold text-lg bg-transparent focus:outline-none text-emerald-900" />
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border">
+            <label class="text-[11px] text-slate-500 font-bold">Collar / Gala (Inches)</label>
+            <input id="npCollar" type="number" step="0.5" value="15.5" class="w-full font-extrabold text-lg bg-transparent focus:outline-none text-emerald-900" />
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border">
+            <label class="text-[11px] text-slate-500 font-bold">Shalwar / Trouser (Inches)</label>
+            <input id="npShalwar" type="number" step="0.5" value="39.0" class="w-full font-extrabold text-lg bg-transparent focus:outline-none text-emerald-900" />
+          </div>
+        </div>
+
+        <button onclick="saveNaapProfile()" class="w-full emerald-grad text-white font-bold py-3 rounded-xl shadow text-sm">
+          💾 Save Naap to My Cloud Vault
+        </button>
+      </div>
+    </section>
+
+    <!-- 6. MY ORDERS & 7-STAGE LIVE TRACKING -->
+    <section id="sec-orders" class="hidden max-w-5xl mx-auto px-4 py-8 space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-extrabold">My Orders & Live Tracking</h2>
+          <p class="text-xs text-slate-500">Real-time 7-stage production updates from your Master Darzi</p>
+        </div>
+        <button onclick="openBookingModal('Custom Suit Stitching', 2200)" class="gold-grad text-slate-950 font-bold text-xs px-4 py-2 rounded-xl">+ New Order</button>
+      </div>
+      <div id="ordersContainer" class="space-y-4"></div>
+    </section>
+
+    <!-- 7. NOTIFICATIONS SECTION -->
+    <section id="sec-notifications" class="hidden max-w-3xl mx-auto px-4 py-8 space-y-4">
+      <h2 class="text-2xl font-extrabold">Notifications & Offers</h2>
+      <div class="emerald-grad text-white p-5 rounded-2xl shadow flex items-center justify-between">
+        <div>
+          <span class="bg-amber-400 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Welcome Promo</span>
+          <h3 class="font-extrabold text-lg mt-1">Get 20% OFF Your First Stitching Order!</h3>
+          <p class="text-xs text-emerald-100">Use code <strong class="text-amber-300">MULTAN20</strong> at checkout. Free doorstep fabric pickup included.</p>
+        </div>
+        <button onclick="openBookingModal('Men\'s Shalwar Kameez', 1800)" class="bg-white text-emerald-900 font-bold text-xs px-4 py-2.5 rounded-xl whitespace-nowrap">Claim Offer</button>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border text-sm space-y-2">
+        <p class="font-bold text-emerald-800">🚴 Rider Dispatched for Order #KS-9042</p>
+        <p class="text-xs text-slate-500">Rider Muhammad Asif is on the way to Gulgasht Colony, Multan for fabric pickup (OTP: 4829).</p>
+      </div>
+    </section>
+
+    <!-- 8. ACCOUNT / LOGIN SECTION -->
+    <section id="sec-account" class="hidden max-w-md mx-auto px-4 py-8">
+      <div class="bg-white p-6 rounded-3xl shadow-md border space-y-5">
+        <div class="text-center space-y-1">
+          <div class="w-14 h-14 rounded-2xl emerald-grad text-white mx-auto flex items-center justify-center text-2xl font-black shadow">K➰</div>
+          <h2 class="text-xl font-extrabold pt-2">Customer Account</h2>
+          <p class="text-xs text-slate-500">Login with your mobile number (+92)</p>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600">Mobile Number</label>
+            <input id="loginPhone" type="tel" value="+92 301 8452910" class="w-full mt-1 p-3 rounded-xl border text-sm font-semibold" />
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600">Password / OTP</label>
+            <input id="loginPass" type="password" value="123456" class="w-full mt-1 p-3 rounded-xl border text-sm font-semibold" />
+          </div>
+          <button onclick="loginUser()" class="w-full emerald-grad text-white font-bold py-3 rounded-xl text-sm shadow">
+            Login / Verify Account
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. HIDDEN ADMIN: WEBSITE BACKEND CMS & ERP -->
+    <section id="sec-admin-cms" class="hidden max-w-7xl mx-auto px-4 py-8 space-y-6">
+      <div class="bg-slate-900 text-white p-6 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full">Admin ERP Console</span>
+          <h2 class="text-2xl font-extrabold mt-1">KapraSilai Backend CMS & Order Dispatch</h2>
+          <p class="text-xs text-slate-400">Manage all customer orders, advance production stages, and onboard new Darzis</p>
+        </div>
+        <button onclick="showSection('home')" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-xs font-bold">Exit Admin</button>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-2xl border shadow-xs">
+          <p class="text-xs text-slate-500 font-semibold">Total Orders</p>
+          <p id="kpiOrders" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border shadow-xs">
+          <p class="text-xs text-slate-500 font-semibold">Gross GMV (PKR)</p>
+          <p id="kpiGMV" class="text-2xl font-extrabold text-emerald-700 mt-1">0</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border shadow-xs">
+          <p class="text-xs text-slate-500 font-semibold">Platform Commission (20%)</p>
+          <p id="kpiComm" class="text-2xl font-extrabold text-amber-600 mt-1">0</p>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border shadow-xs">
+          <p class="text-xs text-slate-500 font-semibold">Verified Darzis</p>
+          <p id="kpiTailors" class="text-2xl font-extrabold text-purple-700 mt-1">6</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border shadow-xs overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead class="bg-slate-50 text-slate-600 uppercase text-[11px]">
+            <tr>
+              <th class="p-3.5">Order ID</th>
+              <th class="p-3.5">Customer & City</th>
+              <th class="p-3.5">Service & Tailor</th>
+              <th class="p-3.5">Total</th>
+              <th class="p-3.5">Current Stage</th>
+              <th class="p-3.5">Action</th>
+            </tr>
+          </thead>
+          <tbody id="adminOrdersTable" class="divide-y"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 10. HIDDEN ADMIN: DARZI PARTNER PORTAL -->
+    <section id="sec-darzi-portal" class="hidden max-w-5xl mx-auto px-4 py-8 space-y-4">
+      <div class="emerald-grad text-white p-6 rounded-3xl flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-extrabold">Darzi Partner Portal (Digital Job Cards)</h2>
+          <p class="text-xs text-emerald-100">View customer AI Naap measurements and update stitching status</p>
+        </div>
+        <button onclick="showSection('home')" class="bg-white/10 px-3 py-1.5 rounded-xl text-xs font-bold">Back</button>
+      </div>
+      <div id="darziJobCards" class="grid sm:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- 11. HIDDEN ADMIN: RIDER PICKUP/DELIVERY APP -->
+    <section id="sec-rider-app" class="hidden max-w-4xl mx-auto px-4 py-8 space-y-4">
+      <div class="bg-blue-950 text-white p-6 rounded-3xl flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-extrabold">🚴 KapraSilai Rider Dispatch App</h2>
+          <p class="text-xs text-blue-200">Doorstep fabric pickup & stitched garment delivery routes</p>
+        </div>
+        <button onclick="showSection('home')" class="bg-white/10 px-3 py-1.5 rounded-xl text-xs font-bold">Back</button>
+      </div>
+      <div id="riderTasksList" class="space-y-3"></div>
+    </section>
+
+    <!-- 12. HIDDEN ADMIN: GITHUB & DOMAIN DEPLOYER -->
+    <section id="sec-cloud-deploy" class="hidden max-w-4xl mx-auto px-4 py-8 space-y-4">
+      <div class="bg-white p-6 rounded-3xl border shadow-sm space-y-4">
+        <h2 class="text-xl font-extrabold text-purple-900"><i class="fab fa-github mr-2"></i>kaprasilai.pk Free Hosting & DNS Configuration</h2>
+        <p class="text-xs text-slate-600">Point your WebSouls / Cloudflare DNS for <strong>kaprasilai.pk</strong> to GitHub Pages using these 4 A-Records:</p>
+        <div class="bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs space-y-1">
+          <div>A Record @ → 185.199.108.153</div>
+          <div>A Record @ → 185.199.109.153</div>
+          <div>A Record @ → 185.199.110.153</div>
+          <div>A Record @ → 185.199.111.153</div>
+          <div>CNAME www → faheemrehan507-creator.github.io</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= BOOKING WIZARD MODAL ================= -->
+  <div id="bookingModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-xs">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <span class="text-[11px] font-bold uppercase text-emerald-700">Doorstep Tailoring Booking</span>
+          <h3 id="modalServiceTitle" class="text-lg font-extrabold">Men's Shalwar Kameez</h3>
+        </div>
+        <button onclick="closeBookingModal()" class="p-1.5 rounded-lg hover:bg-slate-100"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="space-y-3 text-sm">
+        <div>
+          <label class="text-xs font-bold text-slate-600">Select Master Tailor</label>
+          <select id="bkTailor" class="w-full mt-1 p-2.5 rounded-xl border font-semibold text-sm"></select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600">Stitching Turnaround</label>
+            <select id="bkSpeed" onchange="updateBookingTotal()" class="w-full mt-1 p-2.5 rounded-xl border font-semibold text-sm">
+              <option value="0">7 Days (Economy - Standard)</option>
+              <option value="300">5 Days (Standard +PKR 300)</option>
+              <option value="700">3 Days (Express +PKR 700)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600">Fabric Collection</label>
+            <select id="bkFabric" class="w-full mt-1 p-2.5 rounded-xl border font-semibold text-sm">
+              <option value="Rider Will Collect Fabric (Free)">Rider Collects Fabric (Free)</option>
+              <option value="Provide Naap Sample Garment">Rider Collects Sample Suit</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-600">Pickup & Delivery Address</label>
+          <input id="bkAddress" type="text" value="House #42, Block C, Gulgasht Colony, Multan" class="w-full mt-1 p-2.5 rounded-xl border text-sm" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600">Payment Method</label>
+            <select id="bkPayment" class="w-full mt-1 p-2.5 rounded-xl border font-semibold text-sm">
+              <option value="Cash on Delivery (COD)">Cash on Delivery (COD)</option>
+              <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa</option>
+              <option value="Bank Transfer">Bank / Card Transfer</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600">Promo Code</label>
+            <input id="bkPromo" type="text" placeholder="MULTAN20" oninput="updateBookingTotal()" class="w-full mt-1 p-2.5 rounded-xl border text-sm uppercase font-bold" />
+          </div>
+        </div>
+
+        <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 flex items-center justify-between">
+          <div>
+            <span class="text-xs text-slate-500 block">Total Stitching Amount</span>
+            <span class="text-xl font-extrabold text-emerald-900">PKR <span id="bkTotalDisplay">1,800</span></span>
+          </div>
+          <span class="text-[11px] bg-emerald-800 text-white px-2.5 py-1 rounded-full font-bold">Free Rider Pickup</span>
+        </div>
+
+        <button onclick="confirmBooking()" class="w-full emerald-grad text-white font-extrabold py-3.5 rounded-xl shadow-lg text-sm">
+          ✓ Confirm Order & Schedule Rider Pickup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CLEAN CUSTOMER WEBSITE FOOTER ================= -->
+  <footer class="bg-slate-900 text-slate-300 py-10 px-4 mt-12">
+    <div class="max-w-7xl mx-auto grid sm:grid-cols-2 md:grid-cols-4 gap-8 text-xs">
+      <div class="space-y-2">
+        <div class="flex items-center space-x-2">
+          <span class="font-extrabold text-lg text-white">Kapra<span class="text-amber-400">Silai</span></span>
+          <span class="ribbon-loop">➰</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed">Pakistan's #1 AI Tailoring Marketplace connecting customers with verified Master Darzis and certified home-based Female Tailors.</p>
+      </div>
+      <div>
+        <h4 class="font-bold text-white uppercase mb-3">Stitching Services</h4>
+        <ul class="space-y-1.5 text-slate-400">
+          <li>Men's Bespoke Shalwar Kameez</li>
+          <li>Women's 2-Pc & 3-Pc Lawn Stitching</li>
+          <li>Bridal & Party Wear Boutique</li>
+          <li>Kids Festive & Uniform Stitching</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-white uppercase mb-3">Active Cities</h4>
+        <ul class="space-y-1.5 text-slate-400">
+          <li>📍 Multan (Gulgasht, Cantt, Bosan Rd, DHA)</li>
+          <li>📍 Lahore (Johar Town, Gulberg, DHA)</li>
+          <li>📍 Rawalpindi & Islamabad</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-white uppercase mb-3">Customer Care & Contact</h4>
+        <ul class="space-y-1.5 text-slate-400">
+          <li>📞 Helpline: +92 301 8452910</li>
+          <li>✉️ support@kaprasilai.pk</li>
+          <li>🕒 Hours: 9:00 AM – 10:00 PM (Mon-Sun)</li>
+          <li class="text-amber-400 font-semibold">🛡️ 7-Day Free Alteration Guarantee</li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= STICKY 5-TAB MOBILE BOTTOM NAVIGATION ================= -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40 flex justify-around items-center h-16 shadow-2xl">
+    <button onclick="showSection('home')" class="flex flex-col items-center justify-center text-emerald-800 font-bold text-[11px]">
+      <i class="fas fa-home text-lg mb-0.5"></i><span>Home</span>
+    </button>
+    <button onclick="showSection('studio')" class="flex flex-col items-center justify-center text-slate-500 hover:text-emerald-800 font-semibold text-[11px]">
+      <i class="fas fa-shirt text-lg mb-0.5"></i><span>3D Studio</span>
+    </button>
+    <button onclick="showSection('naap')" class="flex flex-col items-center justify-center text-slate-500 hover:text-emerald-800 font-semibold text-[11px]">
+      <i class="fas fa-ruler-combined text-lg mb-0.5"></i><span>AI Naap</span>
+    </button>
+    <button onclick="showSection('orders')" class="flex flex-col items-center justify-center text-slate-500 hover:text-emerald-800 font-semibold text-[11px]">
+      <i class="fas fa-box-open text-lg mb-0.5"></i><span>My Orders</span>
+    </button>
+    <button onclick="showSection('account')" class="flex flex-col items-center justify-center text-slate-500 hover:text-emerald-800 font-semibold text-[11px]">
+      <i class="fas fa-user text-lg mb-0.5"></i><span>Account</span>
+    </button>
+  </nav>
+
+  <!-- ================= FULL-STACK APPLICATION ENGINE (JS) ================= -->
+  <script>
+    const STAGES = [
+      "Order Confirmed",
+      "Rider Fabric Picked",
+      "At Darzi Workshop",
+      "Cutting & Naap",
+      "Stitching in Progress",
+      "Quality Check & Steam Press",
+      "Delivered"
+    ];
+
+    const SERVICES = [
+      { name: "Men's Shalwar Kameez (Single Silai)", price: 1800, fabric: "4.5 Meters", cat: "Men" },
+      { name: "Men's Kurta Pajama / Double Silai", price: 2100, fabric: "4.5 Meters", cat: "Men" },
+      { name: "Men's Bespoke Waistcoat / 2-Pc Suit", price: 4500, fabric: "3.5 Meters", cat: "Men" },
+      { name: "Women's 2-Piece Lawn Suit", price: 1600, fabric: "5.0 Meters", cat: "Women" },
+      { name: "Women's 3-Piece Designer Lawn", price: 2500, fabric: "7.5 Meters", cat: "Women" },
+      { name: "Women's Party Wear / Bridal Maxi", price: 5500, fabric: "Custom", cat: "Women" },
+      { name: "Kids Festive Kurta / Frock", price: 1200, fabric: "2.5 Meters", cat: "Kids" }
+    ];
+
+    const TAILORS = [
+      { id: 1, name: "Ustad Ghulam Rasool & Sons", city: "Multan", area: "Hussain Agahi / Gulgasht", rating: 4.9, reviews: 312, price: 1800, female: false, spec: "Men's Shalwar Kameez, Boski & Waistcoat", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80" },
+      { id: 2, name: "Baji Ayesha Boutique (Female Darzi)", city: "Multan", area: "Cantt & Model Town", rating: 5.0, reviews: 245, price: 1600, female: true, spec: "Women's 3-Pc Lawn, Piping & Bridal Maxi", img: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80" },
+      { id: 3, name: "Royal Bespoke Master Tailors", city: "Lahore", area: "Johar Town & DHA", rating: 4.9, reviews: 410, price: 2200, female: false, spec: "2-Piece Suits, Sherwani & Kurta", img: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" },
+      { id: 4, name: "Fatima Women Empowerment Stitch", city: "Lahore", area: "Gulberg III", rating: 4.9, reviews: 189, price: 1800, female: true, spec: "Ladies Designer Wear & Kids Frocks", img: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=600&q=80" },
+      { id: 5, name: "Master Tariq Darzi House", city: "Rawalpindi", area: "Saddar & Bahria Town", rating: 4.8, reviews: 164, price: 1700, female: false, spec: "Gents Shalwar Kameez & Formal Suits", img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80" }
+    ];
+
+    let activeFilter = 'All';
+    let currentBasePrice = 1800;
+    let orders = JSON.parse(localStorage.getItem('ks_orders_v5') || 'null') || [
+      {
+        id: "KS-9042",
+        service: "Men's Shalwar Kameez (Double Silai)",
+        tailor: "Ustad Ghulam Rasool & Sons",
+        city: "Multan",
+        address: "House #42, Block C, Gulgasht Colony, Multan",
+        total: 1800,
+        stageIndex: 4,
+        date: "Oct 17, 2026",
+        otp: "4829"
+      },
+      {
+        id: "KS-9048",
+        service: "Women's 3-Piece Designer Lawn",
+        tailor: "Baji Ayesha Boutique (Female Darzi)",
+        city: "Multan",
+        address: "Street 4, Bosan Road, Multan",
+        total: 2500,
+        stageIndex: 2,
+        date: "Oct 17, 2026",
+        otp: "7310"
+      }
+    ];
+
+    function saveOrders() {
+      localStorage.setItem('ks_orders_v5', JSON.stringify(orders));
+      renderOrders();
+      renderAdmin();
+    }
+
+    function toggleDrawer() {
+      const dr = document.getElementById('sideDrawer');
+      const ov = document.getElementById('drawerOverlay');
+      const isOpen = !dr.classList.contains('-translate-x-full');
+      if (isOpen) {
+        dr.classList.add('-translate-x-full');
+        ov.classList.add('hidden');
+      } else {
+        dr.classList.remove('-translate-x-full');
+        ov.classList.remove('hidden');
+      }
+    }
+
+    function toggleAdminMenu() {
+      const sec = document.getElementById('hiddenAdminSection');
+      const chv = document.getElementById('adminChevron');
+      sec.classList.toggle('hidden');
+      chv.classList.toggle('rotate-180');
+    }
+
+    function navFromDrawer(secId) {
+      toggleDrawer();
+      showSection(secId);
+    }
+
+    function showSection(secId) {
+      const allSecs = ['home','services','tailors','studio','naap','orders','notifications','account','admin-cms','darzi-portal','rider-app','cloud-deploy'];
+      allSecs.forEach(s => {
+        const el = document.getElementById('sec-' + s);
+        if (el) el.classList.add('hidden');
+      });
+      if (secId === 'home') {
+        document.getElementById('sec-home').classList.remove('hidden');
+        document.getElementById('sec-tailors').classList.remove('hidden');
+      } else {
+        const target = document.getElementById('sec-' + secId);
+        if (target) target.classList.remove('hidden');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderAdmin();
+    }
+
+    function renderServices() {
+      const grid = document.getElementById('serviceCatalogGrid');
+      grid.innerHTML = SERVICES.map(s => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs flex flex-col justify-between card-hover">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800">${s.cat} Stitching</span>
+            <h3 class="font-extrabold text-base mt-2">${s.name}</h3>
+            <p class="text-xs text-slate-500 mt-1">Required Fabric: <strong>${s.fabric}</strong></p>
+          </div>
+          <div class="mt-4 pt-3 border-t flex items-center justify-between">
+            <span class="font-extrabold text-emerald-900 text-lg">PKR ${s.price.toLocaleString()}</span>
+            <button onclick="openBookingModal('${s.name.replace(/'/g, "\\'")}', ${s.price})" class="emerald-grad text-white text-xs font-bold px-4 py-2 rounded-xl">Book Now</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setTailorFilter(f) {
+      activeFilter = f;
+      filterTailors();
+    }
+
+    function filterTailors() {
+      const city = document.getElementById('citySelector').value;
+      const grid = document.getElementById('tailorsGrid');
+      const filtered = TAILORS.filter(t => {
+        if (city !== 'All' && t.city !== city) return false;
+        if (activeFilter === 'Female' && !t.female) return false;
+        if (activeFilter === 'Top' && t.rating < 4.9) return false;
+        return true;
+      });
+
+      grid.innerHTML = filtered.map(t => `
+        <div class="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-xs card-hover flex flex-col justify-between">
+          <div>
+            <div class="h-44 relative overflow-hidden">
+              <img src="${t.img}" alt="${t.name}" class="w-full h-full object-cover" />
+              <span class="absolute top-3 left-3 bg-black/70 text-white text-[11px] font-bold px-2.5 py-1 rounded-full">📍 ${t.city} • ${t.area}</span>
+              ${t.female ? `<span class="absolute top-3 right-3 bg-purple-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full">👩‍🎨 Female Darzi</span>` : ''}
+            </div>
+            <div class="p-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-base">${t.name}</h3>
+                <span class="text-xs font-bold text-amber-600">★ ${t.rating} (${t.reviews})</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">${t.spec}</p>
+            </div>
+          </div>
+          <div class="px-4 pb-4 pt-2 border-t flex items-center justify-between">
+            <span class="text-xs text-slate-500">Starts <strong class="text-emerald-900 text-sm">PKR ${t.price}</strong></span>
+            <button onclick="openBookingModal('${t.spec.split(',')[0]}', ${t.price}, '${t.name.replace(/'/g, "\\'")}')" class="emerald-grad text-white text-xs font-bold px-4 py-2 rounded-xl shadow">Select Tailor</button>
+          </div>
+        </div>
+      `).join('');
+
+      const sel = document.getElementById('bkTailor');
+      if (sel) {
+        sel.innerHTML = TAILORS.map(t => `<option value="${t.name}">${t.name} (${t.city} - ★${t.rating})</option>`).join('');
+      }
+    }
+
+    function quickBook() {
+      const val = document.getElementById('quickCategory').value.split('|');
+      openBookingModal(val[0], parseInt(val[1], 10));
+    }
+
+    function openBookingModal(serviceName, price, tailorName) {
+      currentBasePrice = price;
+      document.getElementById('modalServiceTitle').textContent = serviceName;
+      if (tailorName) document.getElementById('bkTailor').value = tailorName;
+      updateBookingTotal();
+      document.getElementById('bookingModal').classList.remove('hidden');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.add('hidden');
+    }
+
+    function updateBookingTotal() {
+      const speedExtra = parseInt(document.getElementById('bkSpeed').value || '0', 10);
+      const promo = (document.getElementById('bkPromo').value || '').trim().toUpperCase();
+      let total = currentBasePrice + speedExtra;
+      if (promo === 'MULTAN20' || promo === 'KAPRA10') {
+        total = Math.round(total * 0.8);
+      }
+      document.getElementById('bkTotalDisplay').textContent = total.toLocaleString();
+      return total;
+    }
+
+    function confirmBooking() {
+      const service = document.getElementById('modalServiceTitle').textContent;
+      const tailor = document.getElementById('bkTailor').value;
+      const address = document.getElementById('bkAddress').value;
+      const total = updateBookingTotal();
+      const newOrder = {
+        id: "KS-" + Math.floor(1000 + Math.random() * 9000),
+        service,
+        tailor,
+        city: document.getElementById('citySelector').value === 'All' ? 'Multan' : document.getElementById('citySelector').value,
+        address,
+        total,
+        stageIndex: 0,
+        date: "Just Now",
+        otp: String(Math.floor(1000 + Math.random() * 9000))
+      };
+      orders.unshift(newOrder);
+      saveOrders();
+      closeBookingModal();
+      showSection('orders');
+    }
+
+    function renderOrders() {
+      const box = document.getElementById('ordersContainer');
+      box.innerHTML = orders.map((o, idx) => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
+            <div>
+              <span class="text-xs font-extrabold bg-emerald-100 text-emerald-900 px-2.5 py-1 rounded-md">#${o.id}</span>
+              <h3 class="font-extrabold text-base mt-1">${o.service}</h3>
+              <p class="text-xs text-slate-500">Darzi: <strong>${o.tailor}</strong> • 📍 ${o.address}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-lg font-extrabold text-emerald-900">PKR ${o.total.toLocaleString()}</span>
+              <span class="block text-[11px] text-amber-700 font-bold">Pickup OTP: ${o.otp}</span>
+            </div>
+          </div>
+
+          <!-- 7-Stage Progress Bar -->
+          <div class="grid grid-cols-2 sm:grid-cols-7 gap-2 pt-1">
+            ${STAGES.map((st, sIdx) => `
+              <div class="p-2 rounded-xl text-center border ${sIdx <= o.stageIndex ? 'bg-emerald-50 border-emerald-500 text-emerald-900 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'} text-[11px]">
+                <div class="text-xs mb-0.5">${sIdx <= o.stageIndex ? '✅' : '⏳'}</div>
+                ${st}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function advanceOrderStage(idx) {
+      if (orders[idx].stageIndex < STAGES.length - 1) {
+        orders[idx].stageIndex++;
+        saveOrders();
+      }
+    }
+
+    function renderAdmin() {
+      document.getElementById('kpiOrders').textContent = orders.length;
+      const gmv = orders.reduce((acc, o) => acc + o.total, 0);
+      document.getElementById('kpiGMV').textContent = gmv.toLocaleString();
+      document.getElementById('kpiComm').textContent = Math.round(gmv * 0.2).toLocaleString();
+
+      const tbody = document.getElementById('adminOrdersTable');
+      if (tbody) {
+        tbody.innerHTML = orders.map((o, idx) => `
+          <tr>
+            <td class="p-3.5 font-bold text-emerald-900">#${o.id}</td>
+            <td class="p-3.5">${o.city}<br><span class="text-xs text-slate-400">${o.address}</span></td>
+            <td class="p-3.5 font-semibold">${o.service}<br><span class="text-xs text-slate-500">${o.tailor}</span></td>
+            <td class="p-3.5 font-bold">PKR ${o.total.toLocaleString()}</td>
+            <td class="p-3.5"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900">${STAGES[o.stageIndex]}</span></td>
+            <td class="p-3.5">
+              <button onclick="advanceOrderStage(${idx})" class="bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-700">Next Stage →</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      const darziBox = document.getElementById('darziJobCards');
+      if (darziBox) {
+        darziBox.innerHTML = orders.map((o, idx) => `
+          <div class="bg-white p-4 rounded-2xl border space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="font-extrabold text-emerald-900">#${o.id} • ${o.service}</span>
+              <span class="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold">${STAGES[o.stageIndex]}</span>
+            </div>
+            <p class="text-xs text-slate-500">Digital Naap: Length 41.5" | Chest 22.5" | Teera 18" | Sleeves 24.5" | Collar 15.5"</p>
+            <button onclick="advanceOrderStage(${idx})" class="w-full emerald-grad text-white text-xs font-bold py-2 rounded-xl">Update Production Stage →</button>
+          </div>
+        `).join('');
+      }
+
+      const riderBox = document.getElementById('riderTasksList');
+      if (riderBox) {
+        riderBox.innerHTML = orders.map((o, idx) => `
+          <div class="bg-white p-4 rounded-2xl border flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-blue-800">#${o.id} • OTP: ${o.otp}</span>
+              <h4 class="font-extrabold text-sm">${o.address}</h4>
+              <p class="text-xs text-slate-500">Workshop: ${o.tailor} • Status: ${STAGES[o.stageIndex]}</p>
+            </div>
+            <button onclick="advanceOrderStage(${idx})" class="bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl">Verify OTP & Next</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateStudio() {
+      const c = document.getElementById('stCollar').value;
+      const f = document.getElementById('stCuff').value;
+      const d = document.getElementById('stDaman').value;
+      document.getElementById('studioSummarySpecs').textContent = `${c} • ${f} • ${d}`;
+    }
+
+    function bookFromStudio() {
+      const specs = document.getElementById('studioSummarySpecs').textContent;
+      openBookingModal('3D Custom Suit (' + specs.split('•')[0].trim() + ')', 2100);
+    }
+
+    function generateAINaap() {
+      const w = parseFloat(document.getElementById('aiWeight').value || '72');
+      document.getElementById('npChest').value = (19 + (w - 55) * 0.18).toFixed(1);
+      document.getElementById('npShoulder').value = (16.5 + (w - 55) * 0.08).toFixed(1);
+      document.getElementById('npCollar').value = (14.5 + (w - 55) * 0.06).toFixed(1);
+      alert('✨ AI Digital Naap Calculated Successfully!');
+    }
+
+    function saveNaapProfile() {
+      alert('💾 Your Digital Naap has been saved to your KapraSilai Cloud Vault!');
+    }
+
+    function loginUser() {
+      alert('✅ Logged in successfully as ' + document.getElementById('loginPhone').value);
+      showSection('home');
+    }
+
+    // Boot App
+    renderServices();
+    filterTailors();
+    renderOrders();
+    renderAdmin();
+  </script>
+</body>
+</html>
