@@ -1,0 +1,19 @@
+{
+  "name": "Kapra Silai (kaprasilai.pk)",
+  "short_name": "KapraSilai",
+  "description": "Your Fabric, Our Craft — AI-Powered Tailoring Marketplace",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#065f46",
+  "theme_color": "#065f46",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon-hd.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
